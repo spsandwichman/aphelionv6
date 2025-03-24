@@ -1,0 +1,17 @@
+1   invalid operation
+2   breakpoint
+3   system call
+4   divide by zero
+5   access violation
+6   unaligned access
+7   floating-point exception
+8   external IRQ
+9   [reserved]
+A   [reserved]
+B   [reserved]
+C   [reserved]
+D   [reserved]
+E   [reserved]
+F   [reserved]
+
+NOTE: access violation takes precedence over unaligned access

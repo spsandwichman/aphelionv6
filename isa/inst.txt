@@ -1,0 +1,158 @@
+note: 
+    simm stands for sign-extended (signed) imm
+    uimm stands for zero-extended (unsigned) imm
+
+loads
+    lw rd, [rs1 + rs2 + simm]
+    lh rd, [rs1 + rs2 + simm]
+    lq rd, [rs1 + rs2 + simm]
+    lb rd, [rs1 + rs2 + simm]
+
+    lsh rd, [rs1 + rs2 + simm]
+    lsq rd, [rs1 + rs2 + simm]
+    lsb rd, [rs1 + rs2 + simm]
+
+    llw rd, [rs1 + rs2 + simm]
+    llh rd, [rs1 + rs2 + simm]
+    llq rd, [rs1 + rs2 + simm]
+    llb rd, [rs1 + rs2 + simm]
+
+stores
+    sw [rs1 + rs2 + simm], rs3
+    sh [rs1 + rs2 + simm], rs3
+    sq [rs1 + rs2 + simm], rs3
+    sb [rs1 + rs2 + simm], rs3
+
+    scw [rs1 + rs2 + simm], rs3
+    sch [rs1 + rs2 + simm], rs3
+    scq [rs1 + rs2 + simm], rs3
+    scb [rs1 + rs2 + simm], rs3
+
+memory fences
+    lfence
+    sfence
+
+arithmetic
+    addi  rd, rs1, imm              rd = rs1 + imm
+    subi  rd, rs1, imm              rd = rs1 - imm
+    imuli rl, rh, rs1, imm          (lo: rl, hi: rh) = rc * simm
+    umuli rl, rh, rs1, imm          (lo: rl, hi: rh) = unsigned rc * uimm
+    idivi rq, rr, rs1, imm          (quo: rq, rem: rr) = rc / simm
+    udivi rq, rr, rs1, imm          (quo: rq, rem: rr) = unsigned rc / uimm
+
+    addr  rd, rs1, rs2              rd = rs1 + rs2
+    subr  rd, rs1, rs2              rd = rs1 - rs2
+    imulr rl, rh, rs1, rs2          (lo: rl, hi: rh) = rs1 * rs2
+    umulr rl, rh, rs1, rs2          (lo: rl, hi: rh) = unsigned rs1 * rs2
+    idivr rq, rr, rs1, rs2          (quo: rq, rem: rr) = rs1 / rs2
+    udivr rq, rr, rs1, rs2          (quo: rq, rem: rr) = unsigned rs1 / rs2
+
+bitwise logic
+    shl rd, rs1, rs2, imm           ra = rs1 << (rs2 + uimm)
+    lsr rd, rs1, rs2, imm           ra = usigned rs1 >> (rs2 + uimm)
+    asr rd, rs1, rs2, imm           ra = rs1 >> (rs2 + uimm)
+    rot rd, rs1, rs2, imm           ra = rotate rs1 by (rs2 + simm)
+    csb rd, rs1                     ra = count set bits of rs1
+    clz rd, rs1                     ra = count leading zeroes of rs1
+    ctz rd, rs1                     ra = count trailing zeroes of rs1
+    ext rd, rs1, rs2                ra = extract bits from rs1 with mask rs2
+    dep rd, rs1, rs2                ra = deposit bits from rs1 with mask rs2
+    rev rd, rs1, imm                ra = reverse bits of rs1 in chunks of 2^uimm
+
+    andr rd, rs1, rs2               rd = rs1 & rs2
+    orr  rd, rs1, rs2               rd = rs1 | rs2
+    xorr rd, rs1, rs2               rd = rs1 ~ rs2
+
+    andi rd, rs1, imm               rd = rs1 & uimm
+    ori  rd, rs1, imm               rd = rs1 | uimm
+    xori rd, rs1, imm               rd = rs1 ~ uimm
+
+comparison
+    seq  rd, rs1, rs2               rd = rs1 == rs2
+    slt  rd, rs1, rs2               rd = rs1 < rs2
+    sle  rd, rs1, rs2               rd = rs1 <= rs2
+    sltu rd, rs1, rs2               rd = unsigned rs1 < rs2
+    sleu rd, rs1, rs2               rd = unsigned rs1 <= rs2
+
+control flow
+    bz  rs, imm                     if rs == 0 { ip += simm * 4; }
+    bnz rs, imm                     if rs != 0 { ip += simm * 4; }
+
+    jal rs1, rs2, imm               rs1 = ip; ip = (rs2 + simm * 4)
+    jmp rs, imm                     ip = (rs + simm * 4)
+
+control
+    syscall                         trigger system call interrupt
+    breakpt                         trigger breakpoint interrupt
+    iret                            
+    wait                            wait for external interrupt
+    lctrl rd, imm                   rd = control register uimm
+    sctrl imm, rs                   control register uimm = rs
+
+-------------- VECTOR INSTRUCTIONS!!!! -------------- 
+
+vector length: 512 bits
+
+config
+    vstride imm                     set vector element stride to 2^uimm
+
+loads
+    vl   va, rb, rc, imm            va = mem[rb] with (rc + uimm) elements
+    vcst va, rb                     va = copy mem[rb] to all elements
+    vset vb, rc, imm, ra            vb[rc + uimm] = ra
+    vget ra, vb, rc, imm            ra = vb[rc + uimm]
+    vcpy va, vb, rc, imm            va = copy vb[rc + uimm] to all elements
+
+stores
+    vs   va, rb, rc, imm            mem[rb] with (rc + uimm) elements = va
+
+integer arithmetic
+    vadd  vd, vs1, vs2
+    vsub  vd, vs1, vs2
+    vimul vl, vh, vs1, vs2
+    vumul vl, vh, vs1, vs2
+    vidiv vq, vr, vs1, vs2
+    vudiv vq, vr, vs1, vs2
+    vcmp  vd, vs1, vs2, imm         element-wise compare with comparison mode, uimm =
+        0   <
+        1   >=
+        2   >
+        3   <=
+        4   unsigned <
+        5   unsigned >=
+        6   unsigned >
+        7   unsigned <=
+        8   ==
+        9   !=
+
+bitwise logic
+    vand vd, vs2, vs1
+    vor  vd, vs2, vs1
+    vxor vd, vs2, vs1
+    vnot vd, vs
+    vcsb rd, vs
+    vclz rd, vs
+    vctz rd, vs
+
+floating point arithmetic
+    vfadd vd, vs1, vs2
+    vfsub vd, vs1, vs2
+    vfmul vd, vs1, vs2
+    vfdiv vd, vs1, vs2
+    vfcnv vd, vs, imm               convert vs to floats with element stride 2^imm
+    vfcmp vd, vs1, vs2, imm         element-wise compare with comparison mode uimm =
+        0   <
+        1   >=
+        2   >
+        3   <=
+    vfclass vd, vs                  classify floating point, vd[i] = 
+        0   when vs[i] is quiet NaN
+        1   when vs[i] is signalling NaN
+        2   when vs[i] is -inf
+        3   when vs[i] is -normal
+        4   when vs[i] is -subnormal
+        5   when vs[i] is -0
+        6   when vs[i] is +0
+        7   when vs[i] is +subnormal
+        8   when vs[i] is +normal
+        9   when vs[i] is +inf

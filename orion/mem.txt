@@ -1,0 +1,31 @@
+physical RAM sticks can be present at:
+    0x0000_1000_0000_0000
+    0x0000_2000_0000_0000
+    0x0000_3000_0000_0000
+        ...
+    0x0000_F000_0000_0000
+
+physical addresses >= 0xFFFF_FF00_0000_0000 are reserved for MMIO and are not cached by the CPU.
+    each device is assigned a 8-bit id N.
+    accesses to physical addresses between 0xFFFF_FFNN_0000_0000 to 0xFFFF_FFNN_FFFF_FFFF
+    will be passed through directly to the device. reads/writes to these addresses must not
+    trigger access violations, even if they have no observable function/return nonsense.
+
+    each active device slot must have specific data present at the beginning (offset 0)
+    of its address space that identifies the device and how it wishes to communicate.
+
+    def DevInfo = struct {
+        device_id: u64,         // unique, non-zero ID for a make/model of a device
+        protocol_id: u64,       // how should this device be communicated with?
+                                // this is so that devices that speak a common protocol 
+                                // can immediately be recognized and communicated with
+        vendor_string: [16]u8,  // 16-character, optionally-null-terminated string
+                                // example: "Orbit Systems\0\0\0"
+        device_string: [32]u8,  // 32-character, optionally-null-terminated string
+        reserved: u64,          // not used right now
+    };
+    sizeof DevInfo == 64 == 0x40
+
+    each core has a corresponding Local Core Device Controller (LCDC).
+    LCDCs provides information about, and mediates interaction between, a processor core and IO devices.
+    for core number N, its corresponding LCDC is located at device slot N.
