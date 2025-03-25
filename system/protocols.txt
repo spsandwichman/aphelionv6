@@ -1,0 +1,18 @@
+Local Core Device Controller
+    protocol_id = 0x0000_0000_0000_0001
+
+    layout:
+        offset      type        RO?     description
+        0x0400      u16         No      Enable interupts for device N
+        0x0402      u16         No      Disable interupts for device N
+        0x0404      u16         No      Set Pending IRQ for device N
+        0x0406      u16         No      Clear Pending IRQ for device N
+
+Basic Framebuffer Interface
+    protocol_id = 0xF481_F481_F481_F481
+
+    layout:
+        offset      type        RO?     description
+        0x0400      u32         Yes     display width
+        0x0404      u32         Yes     display height
+        0x0500      [H*W*3]u8   No      RGB888 flat framebuffer

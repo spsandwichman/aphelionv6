@@ -22,4 +22,4 @@ control registers
             M   virtual memory enabled
             E   external IRQs enabled
     intc    code of last interrupt triggered
-    cpun    (immutable) processor core number (0 on single-core)
+    cpud    (immutable) device slot this CPU is mounted on

@@ -114,16 +114,16 @@ integer arithmetic
     vidiv vq, vr, vs1, vs2
     vudiv vq, vr, vs1, vs2
     vcmp  vd, vs1, vs2, imm         element-wise compare with comparison mode, uimm =
-        0   <
-        1   >=
-        2   >
-        3   <=
-        4   unsigned <
-        5   unsigned >=
-        6   unsigned >
-        7   unsigned <=
-        8   ==
-        9   !=
+        0   ==
+        1   !=
+        2   <
+        3   >=
+        4   >
+        5   <=
+        6   unsigned <
+        7   unsigned >=
+        8   unsigned >
+        9   unsigned <=
 
 bitwise logic
     vand vd, vs2, vs1
@@ -147,7 +147,7 @@ floating point arithmetic
         3   <=
     vfclass vd, vs                  classify floating point, vd[i] = 
         0   when vs[i] is quiet NaN
-        1   when vs[i] is signalling NaN
+        1   when vs[i] is signaling NaN
         2   when vs[i] is -inf
         3   when vs[i] is -normal
         4   when vs[i] is -subnormal
