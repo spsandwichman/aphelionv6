@@ -1,0 +1,2 @@
+a system's firmware ROM is mapped to begin at 0x0001_0000_0000_0000.
+this is where execution begins for the first CPU.

@@ -7,6 +7,7 @@ Local Core Device Controller
         0x0402      u16         No      Disable interupts for device N
         0x0404      u16         No      Set Pending IRQ for device N
         0x0406      u16         No      Clear Pending IRQ for device N
+        0x0408      u64         No      Wake up and begin execution at address N
 
 Basic Framebuffer Interface
     protocol_id = 0xF481_F481_F481_F481

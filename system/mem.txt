@@ -1,3 +1,5 @@
+a system's firmware ROM is mapped to begin at 0x0001_0000_0000_0000.
+
 physical RAM sticks can be present at:
     0x0000_0000_0000_0000
     0x0000_1000_0000_0000
@@ -5,6 +7,8 @@ physical RAM sticks can be present at:
     0x0000_3000_0000_0000
         ...
     0x0000_F000_0000_0000
+
+    physical RAM must stop at 0x0000_FFFF_FFFF_FFFF.
 
 physical addresses >= 0xFFFF_0000_0000_0000 are reserved for MMIO and are not cached by the CPU.
     each device is assigned a 16-bit id N.
