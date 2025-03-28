@@ -101,13 +101,14 @@ config
   A vstride rs, imm                 set vector element stride to 2^(rs + uimm)
 
 loads
-  C vl   va, rb, rc, imm            va = mem[rb] with (rc + uimm) elements
-  C vset vb, rc, imm, ra            vb[rc + uimm] = ra
-  C vget ra, vb, rc, imm            ra = vb[rc + uimm]
-  C vcpy va, vb, rc, imm            va = copy vb[rc + uimm] to all elements
+  C vl    va, rb, rc, imm            va = mem[rb] with (rc + uimm) elements
+  C vlcpy va, rb                     va = copy mem[rb] to all elements
+  C vset  va, rb, imm, rc            va[rb + uimm] = rc
+  C vget  ra, vb, rc, imm            ra = vb[rc + uimm]
+  C vcpy  va, vb, rc, imm            va = copy vb[rc + uimm] to all elements
 
 stores
-  C vs   va, rb, rc, imm            mem[rb] with (rc + uimm) elements = va
+  C vs   ra, vb, rc, imm            mem[ra] with (rc + uimm) elements = vb
 
 integer arithmetic
   C vadd  vd, vs1, vs2
@@ -150,6 +151,7 @@ floating point arithmetic
         3   >=
         4   >
         5   <=
+
   B vfclass vd, vs                  classify floating point, vd[i] = 
         0   when vs[i] is quiet NaN
         1   when vs[i] is signaling NaN
