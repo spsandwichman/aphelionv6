@@ -14,7 +14,8 @@ physical addresses >= 0xFFFF_0000_0000_0000 are reserved for MMIO and are not ca
     each device is assigned a 16-bit id N.
     accesses to physical addresses between 0xFFFF_NNNN_0000_0000 to 0xFFFF_NNNN_FFFF_FFFF
     will be passed through directly to the device. reads/writes to these addresses must not
-    trigger access violations, even if they have no observable function/return nonsense.
+    trigger access violations. if addresses are not used, they must have no observable function 
+    on write and return zero on read.
 
     each active device slot must have specific data present at the beginning (offset 0)
     of its address space that identifies the device and how it wishes to communicate.

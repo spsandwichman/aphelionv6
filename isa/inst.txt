@@ -51,7 +51,7 @@ bitwise logic
   C shl rd, rs1, rs2, imm           ra = rs1 << (rs2 + uimm)
   C lsr rd, rs1, rs2, imm           ra = usigned rs1 >> (rs2 + uimm)
   C asr rd, rs1, rs2, imm           ra = rs1 >> (rs2 + uimm)
-  C rot rd, rs1, rs2, imm           ra = rotate rs1 by (rs2 + simm)
+  C rot rd, rs1, rs2, imm           ra = rotate right rs1 by (rs2 + simm) - when (rs2 + simm) is negative, rotate left
   B csb rd, rs1                     ra = count set bits of rs1
   B clz rd, rs1                     ra = count leading zeroes of rs1
   B ctz rd, rs1                     ra = count trailing zeroes of rs1
@@ -75,10 +75,10 @@ comparison
   C usle rd, rs1, rs2               rd = unsigned rs1 <= rs2
 
   B seqi  rd, rs, imm                rd = rs == simm
-  B slti  rd, rs, imm                rd = rs < uimm
-  B slei  rd, rs, imm                rd = rs <= uimm
-  B uslti rd, rs, imm                rd = unsigned rs1 < simm
-  B uslei rd, rs, imm                rd = unsigned rs1 <= simm
+  B slti  rd, rs, imm                rd = rs < simm
+  B slei  rd, rs, imm                rd = rs <= simm
+  B uslti rd, rs, imm                rd = unsigned rs1 < uimm
+  B uslei rd, rs, imm                rd = unsigned rs1 <= uimm
 
 control flow
   A bz  rs, imm                     if rs == 0 { ip += simm * 4; }
@@ -90,7 +90,7 @@ control flow
 control
   A syscall                         trigger system call interrupt
   A breakpt                         trigger breakpoint interrupt
-  A iret                            
+  A iret                            return from interrupt handler (mechanics TBD)
   A wait                            wait for external interrupt
   A lctrl rd, imm                   rd = control register uimm
   A sctrl imm, rs                   control register uimm = rs
