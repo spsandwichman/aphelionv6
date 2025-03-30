@@ -52,7 +52,7 @@ bitwise logic
   C shl rd, rs1, rs2, imm           ra = rs1 << (rs2 + uimm)
   C lsr rd, rs1, rs2, imm           ra = usigned rs1 >> (rs2 + uimm)
   C asr rd, rs1, rs2, imm           ra = rs1 >> (rs2 + uimm)
-  C rot rd, rs1, rs2, imm           ra = rotate rs1 by (rs2 + simm)
+  C rot rd, rs1, rs2, imm           ra = rotate right rs1 by (rs2 + simm) - when (rs2 + simm) is negative, rotate left
   B csb rd, rs1                     ra = count set bits of rs1
   B clz rd, rs1                     ra = count leading zeroes of rs1
   B ctz rd, rs1                     ra = count trailing zeroes of rs1
@@ -76,10 +76,10 @@ comparison
   C usle rd, rs1, rs2               rd = unsigned rs1 <= rs2
 
   B seqi  rd, rs, imm                rd = rs == simm
-  B slti  rd, rs, imm                rd = rs < uimm
-  B slei  rd, rs, imm                rd = rs <= uimm
-  B uslti rd, rs, imm                rd = unsigned rs1 < simm
-  B uslei rd, rs, imm                rd = unsigned rs1 <= simm
+  B slti  rd, rs, imm                rd = rs < simm
+  B slei  rd, rs, imm                rd = rs <= simm
+  B uslti rd, rs, imm                rd = unsigned rs1 < uimm
+  B uslei rd, rs, imm                rd = unsigned rs1 <= uimm
 
 control flow
   A bz  rs, imm                     if rs == 0 { ip += simm * 4; }
@@ -103,13 +103,14 @@ config
   A vstride rs, imm                 set vector element stride to 2^(rs + uimm)
 
 loads
-  C vl   va, rb, rc, imm            va = mem[rb] with (rc + uimm) elements
-  C vset vb, rc, imm, ra            vb[rc + uimm] = ra
-  C vget ra, vb, rc, imm            ra = vb[rc + uimm]
-  C vcpy va, vb, rc, imm            va = copy vb[rc + uimm] to all elements
+  C vl    va, rb, rc, imm            va = mem[rb] with (rc + uimm) elements
+  C vlcpy va, rb                     va = copy mem[rb] to all elements
+  C vset  va, rb, imm, rc            va[rb + uimm] = rc
+  C vget  ra, vb, rc, imm            ra = vb[rc + uimm]
+  C vcpy  va, vb, rc, imm            va = copy vb[rc + uimm] to all elements
 
 stores
-  C vs   va, rb, rc, imm            mem[rb] with (rc + uimm) elements = va
+  C vs   ra, vb, rc, imm            mem[ra] with (rc + uimm) elements = vb
 
 integer arithmetic
   C vadd  vd, vs1, vs2
@@ -152,6 +153,7 @@ floating point arithmetic
         3   >=
         4   >
         5   <=
+
   B vfclass vd, vs                  classify floating point, vd[i] = 
         0   when vs[i] is quiet NaN
         1   when vs[i] is signaling NaN
