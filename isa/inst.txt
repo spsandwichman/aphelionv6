@@ -33,6 +33,13 @@ memory fences
   A sfence
 
 arithmetic
+  B add   rd, rs1, rs2              rd = rs1 + rs2
+  B sub   rd, rs1, rs2              rd = rs1 - rs2
+  D imul  rl, rh, rs1, rs2          (lo: rl, hi: rh) = rs1 * rs2
+  D umul  rl, rh, rs1, rs2          (lo: rl, hi: rh) = unsigned rs1 * rs2
+  D idiv  rq, rr, rs1, rs2          (quo: rq, rem: rr) = rs1 / rs2
+  D udiv  rq, rr, rs1, rs2          (quo: rq, rem: rr) = unsigned rs1 / rs2
+
   B addi  rd, rs1, imm              rd = rs1 + imm
   B subi  rd, rs1, imm              rd = rs1 - imm
   C imuli rl, rh, rs1, imm          (lo: rl, hi: rh) = rc * simm
@@ -40,12 +47,6 @@ arithmetic
   C idivi rq, rr, rs1, imm          (quo: rq, rem: rr) = rc / simm
   C udivi rq, rr, rs1, imm          (quo: rq, rem: rr) = unsigned rc / uimm
 
-  B add   rd, rs1, rs2              rd = rs1 + rs2
-  B sub   rd, rs1, rs2              rd = rs1 - rs2
-  D imul  rl, rh, rs1, rs2          (lo: rl, hi: rh) = rs1 * rs2
-  D umul  rl, rh, rs1, rs2          (lo: rl, hi: rh) = unsigned rs1 * rs2
-  D idiv  rq, rr, rs1, rs2          (quo: rq, rem: rr) = rs1 / rs2
-  D udiv  rq, rr, rs1, rs2          (quo: rq, rem: rr) = unsigned rs1 / rs2
 
 bitwise logic
   C shl rd, rs1, rs2, imm           ra = rs1 << (rs2 + uimm)
@@ -84,14 +85,15 @@ control flow
   A bz  rs, imm                     if rs == 0 { ip += simm * 4; }
   A bnz rs, imm                     if rs != 0 { ip += simm * 4; }
 
-  B jal rs1, rs2, imm               rs1 = ip; ip = (rs2 + simm * 4)
+  B jal rs2, imm                    lp = ip; ip = (rs2 + simm * 4)
   A jmp rs, imm                     ip = (rs + simm * 4)
 
 control
   A syscall                         trigger system call interrupt
   A breakpt                         trigger breakpoint interrupt
-  A iret                            
   A wait                            wait for external interrupt
+  A spin                            hint spinlock to processor
+  A iret                            
   A lctrl rd, imm                   rd = control register uimm
   A sctrl imm, rs                   control register uimm = rs
 
